@@ -1,4 +1,6 @@
+MAXIMUM_GROUP_SIZE = 6
 MINIMUM_GROUP_SIZE = 2
+DEFAULT_GROUP_SIZE = 4
 
 
 class Students:
@@ -26,18 +28,33 @@ def create_student_objects(students):
 
 
 def find_optimal_group_size(students_to_meet):
-    print(students_to_meet)
-    for i in range(6):
+    for i in range(MAXIMUM_GROUP_SIZE):
         if i >= MINIMUM_GROUP_SIZE:
-            if students_to_meet % (i) == 0:
-                print(i)
+            if students_to_meet % i == 0:
+                return i
+            elif students_to_meet % i == 1 and i > 2:
+                return i
+            else:
+                return DEFAULT_GROUP_SIZE
+
+
+def generate_list_of_groups(size, students):
+    list_of_groups = []
+    for i in range(students // size):
+        list_of_groups.append([])
+    return list_of_groups
 
 
 def generate_minimum_number_of_groups_where_everyone_meets_at_least_once():
     students = get_students()
     create_student_objects(students)
-    find_optimal_group_size(number_of_students_for_each_student_to_meet())
+    group_size = find_optimal_group_size(number_of_students_for_each_student_to_meet())
+    groups = generate_list_of_groups(group_size, number_of_students())
+    for student in students:
+        group = (students.index(student)) // group_size
+        if len(groups[group]) < group_size:
+            groups[group].append(student)
+    print(groups)
 
 
 generate_minimum_number_of_groups_where_everyone_meets_at_least_once()
-
